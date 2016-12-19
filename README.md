@@ -2,4 +2,4 @@
 friday music broadcasting madness
 
 TODO: 
-- Add a window (like a <div>) which loads the http stream
+- Add a window to index.html which loads the http stream
