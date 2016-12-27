@@ -1,0 +1,15 @@
+body 
+{
+	background-color: #FFFFFF;
+	background-image: url("https://s28.postimg.org/cb2ljcm8b/funk_what_the3.jpg");
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-position: center;
+}
+			
+#stream
+{
+	width: 300;
+	height: 32;
+	margin: auto;
+}

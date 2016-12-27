@@ -1,29 +1,24 @@
-<!--background-image: url("https://upload.wikimedia.org/wikipedia/commons/7/74/James-Brown_1973.jpg");-->
-
 <html>
 	<head>
-		<style>
-			body {
-				background-color: #FFFFFF;
-				background-image: url("https://s28.postimg.org/cb2ljcm8b/funk_what_the3.jpg");
-				background-repeat: no-repeat;
-				background-attachment: fixed;
-				background-position: center;
+		<link rel="stylesheet" type="text/css" href="/style">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+		
+		<script>
+			function reloadCSS(){
+				$('link[href="/style"]').attr('href','/style');
 			}
+
+			reloadCSS();
 			
-			#stream
-			{
-				width: 300;
-				height: 32;
-				margin: auto;
-			}
-			
-		</style>
+			setInterval(function(){
+				reloadCSS();
+			}, 5000);
+		</script>
 	</head>
 	<body>
 		<div id="stream">
 			<audio controls>
-				<source src="http://81.237.186.196:1485/stream/swyh.mp3" id="audio" type="audio/mpeg">
+				<source src="/swyh" id="audio" type="audio/mpeg">
 			</audio>
 		</div>
 	</body>
