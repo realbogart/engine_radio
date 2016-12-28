@@ -1,7 +1,7 @@
 body 
 {
-	background-color: #FFFFFF;
-	background-image: url("https://s28.postimg.org/cb2ljcm8b/funk_what_the3.jpg");
+	background-color: #000000;
+	background-image: url("https://raised3rdday.files.wordpress.com/2013/08/cobrakai.png");
 	background-repeat: no-repeat;
 	background-attachment: fixed;
 	background-position: center;
@@ -9,7 +9,38 @@ body
 			
 #stream
 {
+	bottom: 8;
+	position: absolute;
+}
+
+#schedule
+{
+	color: #000000;
 	width: 300;
-	height: 32;
-	margin: auto;
+	height: 34;
+	font-family: monospace;
+	font-size: 14;
+	bottom: 62;
+	position: absolute;
+}
+
+#schedule p
+{
+	color: #FFFF00;
+	margin: 0px;
+}
+
+.show1
+{
+	color: #FF0000;
+}
+
+.show2
+{
+	color: #FF0000;
+}
+
+.show3
+{
+	color: #FF0000;
 }

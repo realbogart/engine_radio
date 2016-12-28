@@ -1,5 +1,4 @@
 # engine_radio
 friday music broadcasting madness
 
-TODO: 
-- Automatically refresh background (when switching shows)
+* Requires the request module: npm install request
