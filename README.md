@@ -7,5 +7,5 @@ friday music broadcasting madness
 Build with:
 docker build -t engine_radio .
 Run with:
-docker run -p 8080:1337 -it --rm --name cobrakai engine_radio
+docker run -p 80:1337 -p 81:1338 -it --rm --name cobrakai engine_radio
 
