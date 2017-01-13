@@ -2,25 +2,31 @@
 	<head>
 		<link rel="stylesheet" type="text/css" href="/style">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+		<script type="text/javascript" src="/simplesocket"></script>
 		
-		<script>
-			function reloadCSS(){
-				$('link[href="/style"]').attr('href','/style');
-			}
-
-			reloadCSS();
+		<script type="text/javascript">
+			var webSocket = $.simpleWebSocket({ url: 'ws://127.0.0.1:1338/' });
+			webSocket.connect();
 			
-			setInterval(function(){
-				reloadCSS();
-			}, 5000);
+			webSocket.isConnected(function(connected) {
+				webSocket.send('connected');
+			});
+			
+			webSocket.listen(function(message) {
+				if(message == 'reload')
+				{
+					$('link[href="/style"]').attr('href','/style');
+				}
+			});
 		</script>
 	</head>
 	<body>
 		<div id="stream">
 			<audio controls>
-				<source src="/swyh" id="audio" type="audio/mpeg">
+				<source src="http://128.199.54.168:8000/stream" id="audio" type="audio/mpeg">
 			</audio>
 		</div>
+		
 		<div id="schedule">
 			<p id="show1">MASSIVE DAMAGE ---------- 1:00</p>
 			<p id="show2">FUNKY FRIDAY ------------ 2:00</p>
