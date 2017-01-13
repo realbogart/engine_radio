@@ -12,10 +12,16 @@
 				webSocket.send('connected');
 			});
 			
-			webSocket.listen(function(message) {
-				if(message == 'reload')
+			webSocket.listen(function(msgString) {
+				var msgJson = JSON.parse( msgString );
+				
+				if(msgJson.type == 'reload')
 				{
 					$('link[href="/style"]').attr('href','/style');
+				}
+				else if(msgJson.type == 'setBackground')
+				{
+					$("body").css("background-image","url('"+msgJson.data+"')");
 				}
 			});
 		</script>

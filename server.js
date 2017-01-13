@@ -9,7 +9,7 @@ var WebSocketServer = require('websocket').server;
 socketClients = [];
 
 function sendAll (message) {
-	console.log('Sending reload message to '+socketClients.length+' clients...');
+	console.log('Sending message to ' + socketClients.length + ' clients: ' + message );
 	
     for ( var i=0; i < socketClients.length; i++ ) {
         socketClients[i].send( message );
@@ -54,32 +54,46 @@ var socketServer = spawnSocketServer(1338);
 //	HTTP server
 //
 
+var simpleResponse = function(response) {
+	response.writeHead(200, {'Content-Type': 'text/html','Content-Length':11});
+	response.write( 'Successful!' );
+	response.end();
+}
+
 var server = http.createServer();
 server.on('request', function(request, response){
+	var url = require('url');
 	var method = request.method;
-	var url = request.url;
+	var url_parts = url.parse(request.url, true);
 	var headers = request.headers;
-
-	if(url == "/swyh") {
+	
+	//console.log( url_parts );
+	
+	if(url_parts.pathname == "/swyh") {
 		var request = require('request');
 		request('http://127.0.0.1:1485/stream/swyh.mp3').pipe(response);
 	}
-	else if(url == "/style"){
+	else if(url_parts.pathname == "/style"){
 		fs.readFile('style.css', function (err, data){
         	response.writeHead(200, {'Content-Type': 'text/css','Content-Length':data.length});
        		response.write(data);
         	response.end();
     	});
 	}
-	else if(url == "/simplesocket"){
+	else if(url_parts.pathname == "/simplesocket"){
 		fs.readFile('jquery.simple.websocket.js', function (err, data){
         	response.writeHead(200, {'Content-Type': 'text/javascript','Content-Length':data.length});
        		response.write(data);
         	response.end();
     	});
 	}
-	else if(url == "/reload"){
-		sendAll( 'reload' );
+	else if(url_parts.pathname == "/reload"){
+		sendAll( JSON.stringify( { type: 'reload', data: 0 } ) );
+		simpleResponse(response);
+	}
+	else if(url_parts.pathname == "/setBackground"){
+		sendAll( JSON.stringify( { type: 'setBackground', data: url_parts.query.image } ) );
+		simpleResponse(response);
 	}
 	else{
 		fs.readFile('index.html', function (err, data){
