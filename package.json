@@ -1,0 +1,12 @@
+{
+  "name": "engine_radio",
+  "version": "0.0.1",
+  "scripts": {
+    "start": "node server.js",
+    "predeploy": "echo im about to deploy",
+    "postdeploy": "echo ive deployed"
+  },
+  "dependencies": {
+    "request": "~2.79.0"
+  }
+}
