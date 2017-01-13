@@ -8,6 +8,9 @@ var fs = require('fs');
 var WebSocketServer = require('websocket').server;
 socketClients = [];
 
+var lastBackground = "https://raised3rdday.files.wordpress.com/2013/08/cobrakai.png";
+var lastActiveShow = "1";
+
 function sendAll (message) {
 	console.log('Sending message to ' + socketClients.length + ' clients: ' + message );
 	
@@ -25,6 +28,10 @@ var requestHandler = function(request) {
 			if( message.utf8Data == '"connected"' )
 			{
 				console.log( "A new listener connected!" );
+				
+				connection.send( JSON.stringify({ type : 'setBackground', data : lastBackground }) );
+				connection.send( JSON.stringify({ type : 'setActiveShow', data : lastActiveShow }) );
+		
 				socketClients.push(connection);
 			}
 		}
@@ -91,8 +98,23 @@ server.on('request', function(request, response){
 		sendAll( JSON.stringify( { type: 'reload', data: 0 } ) );
 		simpleResponse(response);
 	}
-	else if(url_parts.pathname == "/setBackground"){
-		sendAll( JSON.stringify( { type: 'setBackground', data: url_parts.query.image } ) );
+	else if(url_parts.pathname == "/set"){
+		if( Object.prototype.hasOwnProperty.call(url_parts.query, 'image') )
+		{
+			console.log("Switching background to: " + url_parts.query.image);
+			
+			lastBackground = url_parts.query.image;
+			sendAll( JSON.stringify( { type: 'setBackground', data: url_parts.query.image } ) );
+		}
+		
+		if( Object.prototype.hasOwnProperty.call(url_parts.query, 'activeShow') )
+		{
+			console.log("Set active show to: " + url_parts.query.activeShow);
+			
+			lastActiveShow = url_parts.query.activeShow;
+			sendAll( JSON.stringify( { type: 'setActiveShow', data: url_parts.query.activeShow } ) );
+		}
+		
 		simpleResponse(response);
 	}
 	else{

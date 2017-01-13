@@ -23,6 +23,18 @@
 				{
 					$("body").css("background-image","url('"+msgJson.data+"')");
 				}
+				else if(msgJson.type == 'setActiveShow')
+				{
+					$("#show1").removeClass("showActive");
+					$("#show2").removeClass("showActive");
+					$("#show3").removeClass("showActive");
+					
+					$("#show1").addClass("showInactive");
+					$("#show2").addClass("showInactive");
+					$("#show3").addClass("showInactive");
+					
+					$("#show"+msgJson.data).addClass("showActive");
+				}
 			});
 		</script>
 	</head>
@@ -34,9 +46,9 @@
 		</div>
 		
 		<div id="schedule">
-			<p id="show1">MASSIVE DAMAGE ---------- 1:00</p>
-			<p id="show2">FUNKY FRIDAY ------------ 2:00</p>
-			<p id="show3">UNO ORA ----------------- 3:00</p>
+			<p id="show1" class="showInactive">MASSIVE DAMAGE ---------- 13:00</p>
+			<p id="show2" class="showInactive">FUNKY FRIDAY ------------ 14:00</p>
+			<p id="show3" class="showInactive">UNO ORA ----------------- 15:00</p>
 		</div>
 	</body>
 </html>

@@ -24,23 +24,19 @@ body
 	position: absolute;
 }
 
-#schedule p
+p
 {
-	color: #FFFF00;
+	font-family: monospace;
+	font-size: 14;
 	margin: 0px;
 }
 
-.show1
+.showInactive
 {
-	color: #FF0000;
+	color: #FFFF00;
 }
 
-.show2
-{
-	color: #FF0000;
-}
-
-.show3
+.showActive
 {
 	color: #FF0000;
 }
