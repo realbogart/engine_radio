@@ -73,13 +73,14 @@ var spawnSocketServer = function(port) {
 };
 
 var socketServer = spawnSocketServer(config.websocket_port);
-
+console.log("Starting WebSocket server on port "+config.websocket_port);
 
 //
 //	HTTP server
 //
 
 var server = http.createServer().listen(config.httpserver_port);
+console.log("Starting HTTP server on port "+config.httpserver_port);
 
 var simpleResponse = function(response) {
 	response.writeHead(200, {'Content-Type': 'text/html','Content-Length':11});
@@ -92,9 +93,9 @@ var sendPage = function(response) {
 		data = data.replace("<websocket_server>", "ws://"+config.server_ip+":"+config.websocket_port+"/");
 		data = data.replace("<stream_ip>", config.stream_ip);
 		
-        response.writeHead(200, {'Content-Type': 'text/html','Content-Length':data.length});
-       	response.write(data);
-        response.end();
+		response.writeHead(200, {'Content-Type': 'text/html','Content-Length':data.length});
+		response.write(data);
+		response.end();
     });
 }
 
