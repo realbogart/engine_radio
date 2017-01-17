@@ -79,8 +79,7 @@ console.log("Starting WebSocket server on port "+config.websocket_port);
 //	HTTP server
 //
 
-var server = http.createServer().listen(config.httpserver_port);
-console.log("Starting HTTP server on port "+config.httpserver_port);
+var server = http.createServer();
 
 var simpleResponse = function(response) {
 	response.writeHead(200, {'Content-Type': 'text/html','Content-Length':11});
@@ -144,3 +143,6 @@ server.on('request', function(request, response){
 		sendPage(response);
 	}
 });
+
+console.log("Starting HTTP server on port "+config.httpserver_port);
+server.listen(config.httpserver_port);
