@@ -5,7 +5,7 @@
 		<script type="text/javascript" src="/simplesocket"></script>
 		
 		<script type="text/javascript">
-			var webSocket = $.simpleWebSocket({ url: 'ws://128.199.54.168:81/' });
+			var webSocket = $.simpleWebSocket({ url: '<websocket_server>' });
 			webSocket.connect();
 			
 			webSocket.isConnected(function(connected) {
@@ -15,16 +15,13 @@
 			webSocket.listen(function(msgString) {
 				var msgJson = JSON.parse( msgString );
 				
-				if(msgJson.type == 'reload')
-				{
+				if(msgJson.type == 'reload') {
 					$('link[href="/style"]').attr('href','/style');
 				}
-				else if(msgJson.type == 'setBackground')
-				{
+				else if(msgJson.type == 'setBackground') {
 					$("body").css("background-image","url('"+msgJson.data+"')");
 				}
-				else if(msgJson.type == 'setActiveShow')
-				{
+				else if(msgJson.type == 'setActiveShow') {
 					$("#show1").removeClass("showActive");
 					$("#show2").removeClass("showActive");
 					$("#show3").removeClass("showActive");
@@ -41,7 +38,7 @@
 	<body>
 		<div id="stream">
 			<audio controls>
-				<source src="http://128.199.54.168:8000/stream" id="audio" type="audio/mpeg">
+				<source src="<stream_ip>" id="audio" type="audio/mpeg">
 			</audio>
 		</div>
 		
