@@ -89,7 +89,7 @@ var simpleResponse = function(response) {
 
 var sendPage = function(response) {
 	fs.readFile('index.html', "utf-8", function (err, data) {
-		data = data.replace("<websocket_server>", "ws://"+config.server_ip+":"+config.websocket_port+"/");
+		data = data.replace("<websocket_server>", config.websocket_server_ip);
 		data = data.replace("<stream_ip>", config.stream_ip);
 		
 		response.writeHead(200, {'Content-Type': 'text/html','Content-Length':data.length});
