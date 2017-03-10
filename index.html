@@ -22,17 +22,11 @@
 					$("body").css("background-image","url('"+msgJson.data+"')");
 				}
 				else if(msgJson.type == 'setActiveShow') {
-					$("#show1").removeClass("showActive");
-					$("#show2").removeClass("showActive");
-					$("#show3").removeClass("showActive");
-					$("#show4").removeClass("showActive");
-					$("#show5").removeClass("showActive");
-					
-					$("#show1").addClass("showInactive");
-					$("#show2").addClass("showInactive");
-					$("#show3").addClass("showInactive");
-					$("#show4").addClass("showInactive");
-					$("#show5").addClass("showInactive");
+					for(i = 0; i < 10; i++)
+					{
+						$("#show"+i).removeClass("showActive");
+						$("#show"+i).addClass("showInactive");
+					}
 					
 					$("#show"+msgJson.data).addClass("showActive");
 				}
