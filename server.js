@@ -98,6 +98,14 @@ var sendPage = function(response) {
     });
 }
 
+var sendAdmin = function(response) {
+	fs.readFile('admin.html', "utf-8", function (err, data) {
+		response.writeHead(200, {'Content-Type': 'text/html','Content-Length':data.length});
+		response.write(data);
+		response.end();
+    });
+}
+
 server.on('request', function(request, response){
 	var url = require('url');
 	var method = request.method;
@@ -138,6 +146,9 @@ server.on('request', function(request, response){
 		}
 		
 		simpleResponse(response);
+	}
+	else if(url_parts.pathname == "/admin"){
+		sendAdmin(response);
 	}
 	else {
 		sendPage(response);
