@@ -16,11 +16,11 @@ body
 #schedule
 {
 	color: #000000;
-	width: 300;
+	width: 400;
 	height: 34;
 	font-family: monospace;
 	font-size: 14;
-	bottom: 62;
+	bottom: 120;
 	position: absolute;
 }
 
