@@ -106,6 +106,10 @@ var sendAdmin = function(response) {
     });
 }
 
+var updateSchedule = function(schedule) {
+	console.log("New schedule: " + schedule);
+}
+
 server.on('request', function(request, response){
 	var url = require('url');
 	var method = request.method;
@@ -149,6 +153,21 @@ server.on('request', function(request, response){
 	}
 	else if(url_parts.pathname == "/admin"){
 		sendAdmin(response);
+	}
+	else if(url_parts.pathname == "/updateSchedule"){
+		if(request.method == 'POST') {
+			var postString = '';
+
+			request.on('data', function (data) {
+				postString += data;
+			});
+		
+			request.on('end', function () {
+				updateSchedule(postString);
+			});
+		}
+		
+		simpleResponse(response);
 	}
 	else {
 		sendPage(response);
