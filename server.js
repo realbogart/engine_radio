@@ -23,8 +23,10 @@ socketClients = [];
 
 var lastBackground = config.default_background;
 var lastActiveShow = "0";
+var lastSchedule = JSON.stringify( { schedule : [ { label : " ", image : config.default_background } ] } );
 
 function addConnection(connection) {		
+	connection.send( JSON.stringify({ type : 'setSchedule',   data : lastSchedule }) );
 	connection.send( JSON.stringify({ type : 'setBackground', data : lastBackground }) );
 	connection.send( JSON.stringify({ type : 'setActiveShow', data : lastActiveShow }) );
 	
@@ -106,8 +108,19 @@ var sendAdmin = function(response) {
     });
 }
 
-var updateSchedule = function(schedule) {
-	console.log("New schedule: " + schedule);
+var sendSchedule = function(schedule) {
+	var scheduleJSON = JSON.parse( schedule );
+	for (var i = 0; i < scheduleJSON.schedule.length; i++) {
+		if( !Object.prototype.hasOwnProperty.call(scheduleJSON.schedule[i], 'image') )
+		{
+			scheduleJSON.schedule[i].image = config.default_background;
+		}
+	}
+	schedule = JSON.stringify( scheduleJSON );
+	
+	lastSchedule = schedule;
+	sendAll( JSON.stringify( { type: 'setSchedule', data: schedule } ) );
+	console.log("New schedule set!");
 }
 
 server.on('request', function(request, response){
@@ -163,7 +176,7 @@ server.on('request', function(request, response){
 			});
 		
 			request.on('end', function () {
-				updateSchedule(postString);
+				sendSchedule(postString);
 			});
 		}
 		
