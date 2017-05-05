@@ -102,6 +102,9 @@ var sendPage = function(response) {
 
 var sendAdmin = function(response) {
 	fs.readFile('admin.html', "utf-8", function (err, data) {
+		data = data.replace("<websocket_server>", config.websocket_server_ip);
+		data = data.replace("<stream_ip>", config.stream_ip);
+		
 		response.writeHead(200, {'Content-Type': 'text/html','Content-Length':data.length});
 		response.write(data);
 		response.end();
