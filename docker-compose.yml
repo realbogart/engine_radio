@@ -1,0 +1,15 @@
+version: '2'
+services:
+  engine_radio:
+    build: .
+    ports:
+     - "80:1337"
+     - "81:1338"
+  icecast:
+    image: moul/icecast
+    ports:
+     - "8000:8000"
+    volumes:
+     - "~/icecast_files/icecast.xml:/etc/icecast2/icecast.xml"
+     - "/home/icecast/icecast_files/fallback/epic_sax_guy_320.mp3:/usr/share/icecast2/web/epic_sax_guy_320.mp3"
+
