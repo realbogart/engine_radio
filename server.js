@@ -24,11 +24,13 @@ socketClients = [];
 var lastBackground = config.default_background;
 var lastActiveShow = "0";
 var lastSchedule = JSON.stringify( { schedule : [ { label : " ", image : config.default_background } ] } );
+var lastMetaData = JSON.stringify( { type : "none", id : '' } );
 
 function addConnection(connection) {		
 	connection.send( JSON.stringify({ type : 'setSchedule',   data : lastSchedule }) );
 	connection.send( JSON.stringify({ type : 'setBackground', data : lastBackground }) );
 	connection.send( JSON.stringify({ type : 'setActiveShow', data : lastActiveShow }) );
+	connection.send( JSON.stringify({ type : 'setMetaData',   data : lastMetaData }) );
 	
 	socketClients.push(connection);
 
@@ -190,5 +192,58 @@ server.on('request', function(request, response){
 	}
 });
 
+var streamHeaders;
+function readIcyMetaData () {
+	var options = {
+		hostname: 'localhost',
+		port: 8000,
+		path: '/stream',
+		headers: { 'Icy-MetaData' : '1' }
+	};
+	
+	http.get(options, (result) => {
+		result.setEncoding('ascii');
+		
+		streamHeaders = result.headers;
+		console.log( "Stream headers: " );
+		console.log( streamHeaders );
+		
+		var icyMetaInt = parseInt(streamHeaders['icy-metaint']);
+		
+		var data = [];
+		result.on('data', (chunk) => {
+			data = data + chunk;
+			
+			if( data.length > icyMetaInt + 512 )
+			{				
+				var metadata = data.substring( icyMetaInt );
+				var metalength = 16 * parseInt( metadata.charCodeAt(0) );
+				
+				if( metalength > 0 )
+				{
+					metadata = metadata.substring( 1, metalength );
+					
+					var titleStart = metadata.search( "'" );
+					var title = metadata.substring( titleStart + 1 );
+					
+					var titleStop = title.search( "'" );
+					title = title.substring( 0, titleStop );
+					
+					var parts = title.split(":");
+					
+					lastMetaData = JSON.stringify( { type : parts[0], id : parts[1] } );
+					console.log( "New metadata: " + lastMetaData );
+					
+					sendAll( JSON.stringify( { type: 'setMetaData', data: lastMetaData } ) );
+				}
+				
+				data = data.substring( icyMetaInt + metalength + 1 );
+			}
+		});
+	});
+}
+
 console.log("Starting HTTP server on port "+config.httpserver_port);
 server.listen(config.httpserver_port);
+
+readIcyMetaData();

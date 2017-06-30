@@ -44,6 +44,16 @@
 						jQuery('#schedule').append('<p id="show'+i+'" class="showInactive">'+val.label+'</p>');
 					});
 				}
+				else if(msgJson.type == 'setMetaData') {
+					metaDataJson = JSON.parse( msgJson.data );
+					
+					jQuery('#nowPlaying').html('');
+					
+					if( metaDataJson.type == 'spotify' )
+					{
+						jQuery('#nowPlaying').append( '<iframe src="https://open.spotify.com/embed/track/'+metaDataJson.id+'" width="300" height="380" frameborder="0" allowtransparency="true"></iframe>' );
+					}
+				}
 			});
 		</script>
 	</head>
@@ -55,6 +65,9 @@
 		</div>
 		
 		<div id="schedule">
+		</div>
+		
+		<div id="nowPlaying">
 		</div>
 	</body>
 </html>
