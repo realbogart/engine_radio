@@ -195,13 +195,13 @@ server.on('request', function(request, response){
 var streamHeaders;
 function readIcyMetaData () {
 	var options = {
-		hostname: 'localhost',
+		hostname: 'sweeptheleg.club',
 		port: 8000,
 		path: '/stream',
 		headers: { 'Icy-MetaData' : '1' }
 	};
 	
-	http.get(options, (result) => {
+	var request = http.get(options, (result) => {
 		result.setEncoding('ascii');
 		
 		streamHeaders = result.headers;
@@ -229,16 +229,26 @@ function readIcyMetaData () {
 					var titleStop = title.search( "'" );
 					title = title.substring( 0, titleStop );
 					
-					var parts = title.split(":");
-					
-					lastMetaData = JSON.stringify( { type : parts[0], id : parts[1] } );
-					console.log( "New metadata: " + lastMetaData );
-					
-					sendAll( JSON.stringify( { type: 'setMetaData', data: lastMetaData } ) );
+					if( title.length == 0 )
+					{
+						console.log( "No metadata. Restarting listener" );
+						request.abort();
+						
+						setTimeout( readIcyMetaData, 5000 );
+					}
+					else
+					{
+						var parts = title.split(":");
+						lastMetaData = JSON.stringify( { type : parts[0], id : parts[1] } );
+						console.log( "New metadata: " + lastMetaData );
+						sendAll( JSON.stringify( { type: 'setMetaData', data: lastMetaData } ) );
+					}
 				}
 				
 				data = data.substring( icyMetaInt + metalength + 1 );
 			}
+		}).on('error', (e) => {
+			console.log( "Error: " + e.message );
 		});
 	});
 }
