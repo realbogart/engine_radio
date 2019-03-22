@@ -20,7 +20,7 @@ body
 	height: 34;
 	font-family: monospace;
 	font-size: 14;
-	bottom: 120;
+	top: 5;
 	position: absolute;
 }
 
