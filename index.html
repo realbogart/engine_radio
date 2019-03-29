@@ -6,6 +6,53 @@
 		<script type="text/javascript" src="/simplesocket"></script>
 		
 		<script type="text/javascript">
+			var commands = {};
+			commands["reload"] = function( msgJson ){ $('link[href="/style"]').attr('href','/style'); };
+			commands["setBackground"] = function( msgJson ){ $("body").css("background-image","url('"+msgJson.data+"')"); };
+			commands["setActiveShow"] = function( msgJson ){ 
+				for(i = 0; i < 10; i++)
+				{
+					$("#show"+i).removeClass("showActive");
+					$("#show"+i).addClass("showInactive");
+				}
+				
+				$("#show"+msgJson.data).addClass("showActive");
+				
+				if( !(typeof scheduleJson.schedule[msgJson.data] === 'undefined') )
+				{
+					$("body").css("background-image","url('"+scheduleJson.schedule[msgJson.data].image+"')");
+				}
+			};
+			commands["setSchedule"] = function( msgJson ){ 
+				scheduleJson = JSON.parse( msgJson.data );
+				jQuery('#schedule').html('');
+				
+				jQuery.each(scheduleJson.schedule, function(i, val) {
+					jQuery('#schedule').append('<p id="show'+i+'" class="showInactive">'+val.label+'</p>');
+				});
+			};
+			commands["setMetaData"] = function( msgJson ){ 
+				metaDataJson = JSON.parse( msgJson.data );
+				
+				jQuery('#nowPlaying').html('');
+				
+				if( metaDataJson.type == 'spotify' )
+				{
+					jQuery('#nowPlaying').append( '<iframe src="https://open.spotify.com/embed/track/'+metaDataJson.id+'" width="300" height="380" frameborder="0" allowtransparency="true"></iframe>' );
+				}
+			};
+
+			function runCommand( msgJson ) {
+				if( msgJson.type in commands )
+				{
+					commands[msgJson.type](msgJson);
+				}
+				else
+				{
+					alert( "not found" );
+				}
+			}
+
 			var scheduleJson;
 			var webSocket = $.simpleWebSocket({ url: '<websocket_server>' });
 			webSocket.connect();
@@ -16,45 +63,7 @@
 			
 			webSocket.listen(function(msgString) {
 				var msgJson = JSON.parse( msgString );
-
-				if(msgJson.type == 'reload') {
-					$('link[href="/style"]').attr('href','/style');
-				}
-				else if(msgJson.type == 'setBackground') {
-					$("body").css("background-image","url('"+msgJson.data+"')");
-				}
-				else if(msgJson.type == 'setActiveShow') {
-					for(i = 0; i < 10; i++)
-					{
-						$("#show"+i).removeClass("showActive");
-						$("#show"+i).addClass("showInactive");
-					}
-					
-					$("#show"+msgJson.data).addClass("showActive");
-					
-					if( !(typeof scheduleJson.schedule[msgJson.data] === 'undefined') )
-					{
-						$("body").css("background-image","url('"+scheduleJson.schedule[msgJson.data].image+"')");
-					}
-				}
-				else if(msgJson.type == 'setSchedule') {
-					scheduleJson = JSON.parse( msgJson.data );
-					jQuery('#schedule').html('');
-					
-					jQuery.each(scheduleJson.schedule, function(i, val) {
-						jQuery('#schedule').append('<p id="show'+i+'" class="showInactive">'+val.label+'</p>');
-					});
-				}
-				else if(msgJson.type == 'setMetaData') {
-					metaDataJson = JSON.parse( msgJson.data );
-					
-					jQuery('#nowPlaying').html('');
-					
-					if( metaDataJson.type == 'spotify' )
-					{
-						jQuery('#nowPlaying').append( '<iframe src="https://open.spotify.com/embed/track/'+metaDataJson.id+'" width="300" height="380" frameborder="0" allowtransparency="true"></iframe>' );
-					}
-				}
+				runCommand( msgJson );
 			});
 		</script>
 	</head>

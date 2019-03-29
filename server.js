@@ -33,14 +33,14 @@ function addConnection(connection) {
 	connection.send( JSON.stringify({ type : 'setMetaData',   data : lastMetaData }) );
 	
 	socketClients.push(connection);
-
-	console.log( "("+socketClients.length+") "+"New connection" );
 	
 	for ( var i = socketClients.length - 1; i >= 0; i-- ) {
         if(!socketClients[i].connected) {
 			socketClients.splice(i, 1);
 		}
     }
+
+    console.log( "("+socketClients.length+") "+"New connection: '"+ connection.remoteAddress +"'" );
 }
 
 function sendAll (message) {
