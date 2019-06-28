@@ -5,6 +5,7 @@ body
 	background-repeat: no-repeat;
 	background-attachment: fixed;
 	background-position: center;
+	overflow: hidden;
 }
 			
 #stream
@@ -30,6 +31,14 @@ body
 	bottom: 10;
 	right: 10;
 	position: absolute;
+}
+
+.fireworks
+{
+	width: 250;
+	height: 250;
+	position: absolute;
+	display:none;
 }
 
 p

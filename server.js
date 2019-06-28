@@ -59,6 +59,11 @@ var requestHandler = function(request) {
 			if( message.utf8Data == '"connected"' ) {
 				addConnection(connection);
 			}
+			else
+			{
+				// TODO: Parse and check message type
+				sendAll( JSON.parse( message.utf8Data ) );
+			}
 		}
 	});
 }
@@ -137,6 +142,13 @@ server.on('request', function(request, response){
 	if(url_parts.pathname == "/style"){
 		fs.readFile('style.css', function (err, data){
         	response.writeHead(200, {'Content-Type': 'text/css','Content-Length':data.length});
+       		response.write(data);
+        	response.end();
+    	});
+	}
+	else if(url_parts.pathname == "/fireworks"){
+		fs.readFile('fireworks.gif', function (err, data){
+        	response.writeHead(200, {'Content-Type': 'image/gif','Content-Length':data.length});
        		response.write(data);
         	response.end();
     	});

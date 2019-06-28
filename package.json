@@ -8,6 +8,6 @@
   },
   "dependencies": {
     "request": "~2.79.0",
-    "websocket": "~1.0.24"
+    "websocket": "^1.0.28"
   }
 }
