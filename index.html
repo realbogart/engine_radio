@@ -46,7 +46,7 @@
 				var fireworks = $('#fireworks'+currentFirework);
 				currentFirework = (currentFirework + 1) % 20;
 				fireworks.show();
-				fireworks.css({top: msgJson.data.positionY, left: msgJson.data.positionX, position: "absolute" });
+				fireworks.css({top: msgJson.data.positionY + $(window).height() / 2, left: msgJson.data.positionX + $(window).width() / 2, position: "absolute" });
 				setTimeout(function() { 
 					fireworks.attr('src', '/fireworks?hack='+currentFirework); 
 				}, 0);
@@ -77,7 +77,9 @@
 			});
 
 			$(document).click(function(e){
-				webSocket.send( JSON.stringify({ type : 'spawnFireworks', data : { positionX : e.pageX - 125, positionY : e.pageY - 125 } }) );
+				var center_x = $(window).width() / 2;
+				var center_y = $(window).height() / 2;
+				webSocket.send( JSON.stringify({ type : 'spawnFireworks', data : { positionX : e.pageX - center_x - 125, positionY : e.pageY - center_y - 125 } }) );
 			});
 		</script>
 	</head>
