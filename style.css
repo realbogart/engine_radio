@@ -39,6 +39,11 @@ body
 	height: 250;
 	position: absolute;
 	display:none;
+	user-select: none;
+   -moz-user-select: none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+   -o-user-select: none;
 }
 
 p
