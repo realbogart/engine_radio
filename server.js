@@ -33,14 +33,14 @@ function addConnection(connection) {
 	connection.send( JSON.stringify({ type : 'setMetaData',   data : lastMetaData }) );
 	
 	socketClients.push(connection);
-
-	console.log( "("+socketClients.length+") "+"New connection" );
 	
 	for ( var i = socketClients.length - 1; i >= 0; i-- ) {
         if(!socketClients[i].connected) {
 			socketClients.splice(i, 1);
 		}
     }
+
+    console.log( "("+socketClients.length+") "+"New connection: '"+ connection.remoteAddress +"'" );
 }
 
 function sendAll (message) {
@@ -58,6 +58,11 @@ var requestHandler = function(request) {
 		if( message.type == 'utf8' ) {
 			if( message.utf8Data == '"connected"' ) {
 				addConnection(connection);
+			}
+			else
+			{
+				// TODO: Parse and check message type
+				sendAll( JSON.parse( message.utf8Data ) );
 			}
 		}
 	});
@@ -137,6 +142,13 @@ server.on('request', function(request, response){
 	if(url_parts.pathname == "/style"){
 		fs.readFile('style.css', function (err, data){
         	response.writeHead(200, {'Content-Type': 'text/css','Content-Length':data.length});
+       		response.write(data);
+        	response.end();
+    	});
+	}
+	else if(url_parts.pathname == "/fireworks"){
+		fs.readFile('fireworks.gif', function (err, data){
+        	response.writeHead(200, {'Content-Type': 'image/gif','Content-Length':data.length});
        		response.write(data);
         	response.end();
     	});

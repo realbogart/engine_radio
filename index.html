@@ -6,6 +6,63 @@
 		<script type="text/javascript" src="/simplesocket"></script>
 		
 		<script type="text/javascript">
+			var commands = {};
+			commands["reload"] = function( msgJson ){ $('link[href="/style"]').attr('href','/style'); };
+			commands["setBackground"] = function( msgJson ){ $("body").css("background-image","url('"+msgJson.data+"')"); };
+			commands["setActiveShow"] = function( msgJson ){ 
+				for(i = 0; i < 10; i++)
+				{
+					$("#show"+i).removeClass("showActive");
+					$("#show"+i).addClass("showInactive");
+				}
+				
+				$("#show"+msgJson.data).addClass("showActive");
+				
+				if( !(typeof scheduleJson.schedule[msgJson.data] === 'undefined') )
+				{
+					$("body").css("background-image","url('"+scheduleJson.schedule[msgJson.data].image+"')");
+				}
+			};
+			commands["setSchedule"] = function( msgJson ){ 
+				scheduleJson = JSON.parse( msgJson.data );
+				jQuery('#schedule').html('');
+				
+				jQuery.each(scheduleJson.schedule, function(i, val) {
+					jQuery('#schedule').append('<p id="show'+i+'" class="showInactive">'+val.label+'</p>');
+				});
+			};
+			commands["setMetaData"] = function( msgJson ){ 
+				metaDataJson = JSON.parse( msgJson.data );
+				
+				jQuery('#nowPlaying').html('');
+				
+				if( metaDataJson.type == 'spotify' )
+				{
+					jQuery('#nowPlaying').append( '<iframe src="https://open.spotify.com/embed/track/'+metaDataJson.id+'" width="300" height="380" frameborder="0" allowtransparency="true"></iframe>' );
+				}
+			};
+			var currentFirework = 0;
+			commands["spawnFireworks"] = function( msgJson ){ 
+				var fireworks = $('#fireworks'+currentFirework);
+				currentFirework = (currentFirework + 1) % 20;
+				fireworks.show();
+				fireworks.css({top: msgJson.data.positionY + $(window).height() / 2, left: msgJson.data.positionX + $(window).width() / 2, position: "absolute" });
+				setTimeout(function() { 
+					fireworks.attr('src', '/fireworks?hack='+currentFirework); 
+				}, 0);
+			};
+
+			function runCommand( msgJson ) {
+				if( msgJson.type in commands )
+				{
+					commands[msgJson.type](msgJson);
+				}
+				else
+				{
+					alert( "not found: " + msgJson.type );
+				}
+			}
+
 			var scheduleJson;
 			var webSocket = $.simpleWebSocket({ url: '<websocket_server>' });
 			webSocket.connect();
@@ -16,49 +73,38 @@
 			
 			webSocket.listen(function(msgString) {
 				var msgJson = JSON.parse( msgString );
+				runCommand( msgJson );
+			});
 
-				if(msgJson.type == 'reload') {
-					$('link[href="/style"]').attr('href','/style');
-				}
-				else if(msgJson.type == 'setBackground') {
-					$("body").css("background-image","url('"+msgJson.data+"')");
-				}
-				else if(msgJson.type == 'setActiveShow') {
-					for(i = 0; i < 10; i++)
-					{
-						$("#show"+i).removeClass("showActive");
-						$("#show"+i).addClass("showInactive");
-					}
-					
-					$("#show"+msgJson.data).addClass("showActive");
-					
-					if( !(typeof scheduleJson.schedule[msgJson.data] === 'undefined') )
-					{
-						$("body").css("background-image","url('"+scheduleJson.schedule[msgJson.data].image+"')");
-					}
-				}
-				else if(msgJson.type == 'setSchedule') {
-					scheduleJson = JSON.parse( msgJson.data );
-					jQuery('#schedule').html('');
-					
-					jQuery.each(scheduleJson.schedule, function(i, val) {
-						jQuery('#schedule').append('<p id="show'+i+'" class="showInactive">'+val.label+'</p>');
-					});
-				}
-				else if(msgJson.type == 'setMetaData') {
-					metaDataJson = JSON.parse( msgJson.data );
-					
-					jQuery('#nowPlaying').html('');
-					
-					if( metaDataJson.type == 'spotify' )
-					{
-						jQuery('#nowPlaying').append( '<iframe src="https://open.spotify.com/embed/track/'+metaDataJson.id+'" width="300" height="380" frameborder="0" allowtransparency="true"></iframe>' );
-					}
-				}
+			$(document).click(function(e){
+				var center_x = $(window).width() / 2;
+				var center_y = $(window).height() / 2;
+				webSocket.send( JSON.stringify({ type : 'spawnFireworks', data : { positionX : e.pageX - center_x - 125, positionY : e.pageY - center_y - 125 } }) );
 			});
 		</script>
 	</head>
 	<body>
+		<img id="fireworks0" class="fireworks" src="/fireworks">
+		<img id="fireworks1" class="fireworks" src="/fireworks">
+		<img id="fireworks2" class="fireworks" src="/fireworks">
+		<img id="fireworks3" class="fireworks" src="/fireworks">
+		<img id="fireworks4" class="fireworks" src="/fireworks">
+		<img id="fireworks5" class="fireworks" src="/fireworks">
+		<img id="fireworks6" class="fireworks" src="/fireworks">
+		<img id="fireworks7" class="fireworks" src="/fireworks">
+		<img id="fireworks8" class="fireworks" src="/fireworks">
+		<img id="fireworks9" class="fireworks" src="/fireworks">
+		<img id="fireworks10" class="fireworks" src="/fireworks">
+		<img id="fireworks11" class="fireworks" src="/fireworks">
+		<img id="fireworks12" class="fireworks" src="/fireworks">
+		<img id="fireworks13" class="fireworks" src="/fireworks">
+		<img id="fireworks14" class="fireworks" src="/fireworks">
+		<img id="fireworks15" class="fireworks" src="/fireworks">
+		<img id="fireworks16" class="fireworks" src="/fireworks">
+		<img id="fireworks17" class="fireworks" src="/fireworks">
+		<img id="fireworks18" class="fireworks" src="/fireworks">
+		<img id="fireworks19" class="fireworks" src="/fireworks">
+
 		<div id="stream">
 			<audio controls autoplay>
 				<source src="<stream_ip>" id="audio" type="audio/mpeg">

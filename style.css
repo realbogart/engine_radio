@@ -5,6 +5,7 @@ body
 	background-repeat: no-repeat;
 	background-attachment: fixed;
 	background-position: center;
+	overflow: hidden;
 }
 			
 #stream
@@ -16,11 +17,10 @@ body
 #schedule
 {
 	color: #000000;
-	width: 400;
 	height: 34;
 	font-family: monospace;
 	font-size: 14;
-	bottom: 120;
+	top: 5;
 	position: absolute;
 }
 
@@ -31,6 +31,19 @@ body
 	bottom: 10;
 	right: 10;
 	position: absolute;
+}
+
+.fireworks
+{
+	width: 250;
+	height: 250;
+	position: absolute;
+	display:none;
+	user-select: none;
+   -moz-user-select: none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+   -o-user-select: none;
 }
 
 p
