@@ -18,17 +18,16 @@
 				
 				$("#show"+msgJson.data).addClass("showActive");
 				
-				if( !(typeof scheduleJson.schedule[msgJson.data] === 'undefined') )
+				if( !(typeof scheduleJson.shows[msgJson.data] === 'undefined') )
 				{
-					$("body").css("background-image","url('"+scheduleJson.schedule[msgJson.data].image+"')");
+					$("body").css("background-image","url('"+scheduleJson.shows[msgJson.data].imageLink+"')");
 				}
 			};
 			commands["setSchedule"] = function( msgJson ){ 
 				scheduleJson = JSON.parse( msgJson.data );
 				jQuery('#schedule').html('');
-				
-				jQuery.each(scheduleJson.schedule, function(i, val) {
-					jQuery('#schedule').append('<p id="show'+i+'" class="showInactive">'+val.label+'</p>');
+				jQuery.each(scheduleJson.shows, function(i, val) {
+					jQuery('#schedule').append('<p id="show'+i+'" class="showInactive">'+val.name+'</p>');
 				});
 			};
 			commands["setMetaData"] = function( msgJson ){ 

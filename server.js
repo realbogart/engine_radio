@@ -1,5 +1,6 @@
 var http = require('http');
 var fs = require('fs');
+var sheets = require("./sheets");
 
 //
 // Configuration
@@ -23,7 +24,7 @@ socketClients = [];
 
 var lastBackground = config.default_background;
 var lastActiveShow = "0";
-var lastSchedule = JSON.stringify( { schedule : [ { label : " ", image : config.default_background } ] } );
+var lastSchedule = JSON.stringify( { shows : [ { time: "00:00", dj:"", name : "", imageLink : config.default_background } ] } );
 var lastMetaData = JSON.stringify( { type : "none", id : '' } );
 
 function addConnection(connection) {		
@@ -119,15 +120,6 @@ var sendAdmin = function(response) {
 }
 
 var sendSchedule = function(schedule) {
-	var scheduleJSON = JSON.parse( schedule );
-	for (var i = 0; i < scheduleJSON.schedule.length; i++) {
-		if( !Object.prototype.hasOwnProperty.call(scheduleJSON.schedule[i], 'image') )
-		{
-			scheduleJSON.schedule[i].image = config.default_background;
-		}
-	}
-	schedule = JSON.stringify( scheduleJSON );
-	
 	lastSchedule = schedule;
 	sendAll( JSON.stringify( { type: 'setSchedule', data: schedule } ) );
 	console.log("New schedule set!");
@@ -183,6 +175,19 @@ server.on('request', function(request, response){
 	}
 	else if(url_parts.pathname == "/admin"){
 		sendAdmin(response);
+	}
+	else if(url_parts.pathname == "/getSchedule"){
+		response.writeHead(200, {'Content-Type': 'application/json','Content-Length':Buffer.byteLength(lastSchedule, 'utf8')});
+       	response.write(lastSchedule);
+        response.end();
+	}
+	else if(url_parts.pathname == "/getSchedules"){
+		sheets.loadSchedules( function(schedules){
+			var schedulesText = JSON.stringify(schedules);
+			response.writeHead(200, {'Content-Type': 'application/json', 'Content-Length':Buffer.byteLength(schedulesText, 'utf8')});
+       		response.write(schedulesText);
+        	response.end();
+		});
 	}
 	else if(url_parts.pathname == "/updateSchedule"){
 		if(request.method == 'POST') {

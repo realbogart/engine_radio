@@ -11,47 +11,78 @@
 			webSocket.send('connected');
 		});
 		
+		function setSchedule(schedule)
+		{
+			jQuery('#schedule').html(JSON.stringify(schedule, null, 4));
+		}
+
 		webSocket.listen(function(msgString) {
 			var msgJson = JSON.parse( msgString );
 
 			if(msgJson.type == 'setSchedule') {
-				scheduleJson = JSON.parse( msgJson.data );
-				jQuery('#schedule').html('');
-				
-				jQuery.each(scheduleJson.schedule, function(i, val) {
-					if( val.label.length > 0 )
-					{
-						jQuery('#schedule').append(val.label + '|' + val.image + '\n');
-					}
-				});
+				setSchedule(JSON.parse( msgJson.data ));
 			}
 		});
-			
+		
+		function validJSON(text) {
+		    try {
+		        JSON.parse(text);
+		    } catch (e) {
+		        return false;
+		    }
+		    return true;
+		}
+
 		$(function() {
 			$('#update').click(function() {
 				var scheduleText = $('#schedule').val();
-				var rows = scheduleText.split("\n");
-				
-				var scheduleJson = new Object();
-				scheduleJson.schedule = [];
-				
-				jQuery.each(rows, function(i, val) {
-					var showInfo = val.split("|");
-					var show = new Object();
-					show.label = showInfo[0];
-					show.image = showInfo[1];
-					scheduleJson.schedule.push( show );
-				});
+				if(validJSON(scheduleText))
+				{
+					$('#info').html("Sending schedule...");
+					$.post('/updateSchedule', scheduleText, function() {
+						$('#info').html("Updated schedule!");
+					});
+				}
+				else
+				{
+					$('#info').html("Invalid JSON");
+				}
+			});
 
-				$.post('/updateSchedule', JSON.stringify( scheduleJson ), function() {
-					
+			function listSchedules(schedules)
+			{
+				$('#sheetSchedule').html('');
+				jQuery.each(schedules, function(i, val) {
+					jQuery('#sheetSchedule').append('<a id="schedule'+i+'">'+val.title+'</a><br>');
+				});
+				$('#schedule' + i).click(function() {
+					setSchedule(val);
+				}
+				//$('#sheetSchedule').html(JSON.stringify(schedules));
+			}
+
+			$('#getSchedules').click(function() {
+				$.ajax({
+					type: 'GET',
+					url: '/getSchedules',
+					dataType: 'json',
+					error: function(request, status, error) {
+						$('#info').html(error.message);
+					},
+					success: function(data) {
+						listSchedules(data);
+					}
 				});
 			});
 		});
 		</script>
 	</head>
 	<body>
-		<textarea id="schedule" rows="8" cols="120"></textarea><br><br>
+		<textarea id="schedule" rows="48" cols="200"></textarea><br><br>
 		<input id="update" type="submit" value="Update"/>
+		<input id="getSchedules" type="submit" value="Load schedules from sheet"/>
+
+		<div id="sheetSchedule"></div>
+		<div id="info"></div>
 	</body>
 </html>
