@@ -53,12 +53,13 @@
 			{
 				$('#sheetSchedule').html('');
 				jQuery.each(schedules, function(i, val) {
-					jQuery('#sheetSchedule').append('<a id="schedule'+i+'">'+val.title+'</a><br>');
+					var newSchedule = $("<p />", { text: val.title });
+					newSchedule.on("click", function() {
+						setSchedule(val);
+					});
+
+					newSchedule.appendTo("#sheetSchedule");
 				});
-				$('#schedule' + i).click(function() {
-					setSchedule(val);
-				}
-				//$('#sheetSchedule').html(JSON.stringify(schedules));
 			}
 
 			$('#getSchedules').click(function() {
