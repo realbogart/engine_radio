@@ -26,8 +26,31 @@
 			commands["setSchedule"] = function( msgJson ){ 
 				scheduleJson = JSON.parse( msgJson.data );
 				jQuery('#schedule').html('');
+
+				var longestNameIndex = 0;
+				var longestName = 0;
 				jQuery.each(scheduleJson.shows, function(i, val) {
-					jQuery('#schedule').append('<p id="show'+i+'" class="showInactive">'+val.name+'</p>');
+					var nameLength = val.name.length;
+					if( val.name && nameLength > longestName )
+					{
+						longestName = val.name.length;
+						longestNameIndex = i;
+					}
+				});
+
+				jQuery.each(scheduleJson.shows, function(i, val) {
+					if( val.name )
+					{
+						var spacing = " ";
+						var nameLength = val.name.length;
+						for(i = 0; i < 3 + longestName - nameLength; i = i + 1)
+						{
+							spacing += "-"
+						}
+						spacing += " ";
+
+						jQuery('#schedule').append('<p id="show'+i+'" class="showInactive">'+val.name + spacing + val.time +'</p>');
+					}
 				});
 			};
 			commands["setMetaData"] = function( msgJson ){ 
