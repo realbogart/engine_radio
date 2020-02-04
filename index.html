@@ -38,6 +38,7 @@
 					}
 				});
 
+				var showIndex = 0;
 				jQuery.each(scheduleJson.shows, function(i, val) {
 					if( val.name )
 					{
@@ -49,7 +50,8 @@
 						}
 						spacing += " ";
 
-						jQuery('#schedule').append('<p id="show'+i+'" class="showInactive">'+val.name + spacing + val.time +'</p>');
+						jQuery('#schedule').append('<p id="show'+showIndex+'" class="showInactive">'+val.name + spacing + val.time + '</p>');
+						showIndex++;
 					}
 				});
 			};
