@@ -121,6 +121,8 @@ function parseSheets(targetSheet)
             show.dj = getStringValue(currentValue);
           else if( value == 2 )
             show.name = getStringValue(currentValue);
+          else if( value == 3 )
+            show.description = getStringValue(currentValue);
           else if( value == 4 )
             show.playlistLink = getStringValue(currentValue);
           else if( value == 5 )

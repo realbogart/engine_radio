@@ -23,7 +23,7 @@ var WebSocketServer = require('websocket').server;
 socketClients = [];
 
 var lastBackground = config.default_background;
-var lastActiveShow = "0";
+var lastActiveShow = -1;
 var lastSchedule = JSON.stringify( { shows : [ { time: "00:00", dj:"", name : "", imageLink : config.default_background } ] } );
 var lastMetaData = JSON.stringify( { type : "none", id : '' } );
 
@@ -119,10 +119,34 @@ var sendAdmin = function(response) {
     });
 }
 
-var sendSchedule = function(schedule) {
+var updateBackground = function() {
+	var scheduleJSON = JSON.parse(lastSchedule);
+	if(lastActiveShow >= 0 && 
+		scheduleJSON.shows && 
+		lastActiveShow < scheduleJSON.shows.length &&
+		scheduleJSON.shows[lastActiveShow].imageLink )
+	{
+		lastBackground = scheduleJSON.shows[lastActiveShow].imageLink;
+	}
+	else
+	{
+		lastBackground = config.default_background;
+	}
+}
+
+var setActiveShow = function(activeShow) {
+	lastActiveShow = activeShow;
+	updateBackground();
+	sendAll( JSON.stringify( { type: 'setActiveShow', data: lastActiveShow } ) );
+	sendAll( JSON.stringify( { type: 'setBackground', data: lastBackground } ) );
+	console.log("Active show set to " + activeShow);
+}
+
+var setSchedule = function(schedule) {
 	lastSchedule = schedule;
-	sendAll( JSON.stringify( { type: 'setSchedule', data: schedule } ) );
-	console.log("New schedule set!");
+	sendAll( JSON.stringify( { type: 'setSchedule', data: lastSchedule } ) );
+	setActiveShow(lastActiveShow);
+	console.log("New schedule set");
 }
 
 server.on('request', function(request, response){
@@ -165,10 +189,15 @@ server.on('request', function(request, response){
 		}
 		
 		if( Object.prototype.hasOwnProperty.call(url_parts.query, 'activeShow') ) {
-			console.log("Set active show to: " + url_parts.query.activeShow);
-			
-			lastActiveShow = url_parts.query.activeShow;
-			sendAll( JSON.stringify( { type: 'setActiveShow', data: url_parts.query.activeShow } ) );
+			var activeShow = parseInt(url_parts.query.activeShow);
+			if(!isNaN(activeShow))
+			{
+				setActiveShow(activeShow);
+			}
+			else
+			{
+				console.log( "Invalid show index: " + url_parts.query.activeShow );
+			}
 		}
 		
 		simpleResponse(response);
@@ -198,7 +227,7 @@ server.on('request', function(request, response){
 			});
 		
 			request.on('end', function () {
-				sendSchedule(postString);
+				setSchedule(postString);
 			});
 		}
 		

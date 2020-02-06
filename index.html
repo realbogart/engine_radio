@@ -17,14 +17,9 @@
 				}
 				
 				$("#show"+msgJson.data).addClass("showActive");
-				
-				if( !(typeof scheduleJson.shows[msgJson.data] === 'undefined') )
-				{
-					$("body").css("background-image","url('"+scheduleJson.shows[msgJson.data].imageLink+"')");
-				}
 			};
 			commands["setSchedule"] = function( msgJson ){ 
-				scheduleJson = JSON.parse( msgJson.data );
+				var scheduleJson = JSON.parse( msgJson.data );
 				jQuery('#schedule').html('');
 
 				var longestNameIndex = 0;
@@ -87,7 +82,6 @@
 				}
 			}
 
-			var scheduleJson;
 			var webSocket = $.simpleWebSocket({ url: '<websocket_server>' });
 			webSocket.connect();
 			
