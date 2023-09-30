@@ -39,7 +39,7 @@
 				if(validJSON(scheduleText))
 				{
 					$('#info').html("Sending schedule...");
-					$.post('/updateSchedule', scheduleText, function() {
+					$.post('/setSchedule', scheduleText, function() {
 						$('#info').html("Updated schedule!");
 					});
 				}

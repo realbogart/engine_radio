@@ -1,13 +1,13 @@
 <html>
 	<head>
 		<title>No mercy...</title>
-		<link rel="stylesheet" type="text/css" href="/style">
+		<link rel="stylesheet" type="text/css" href="/style.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 		<script type="text/javascript" src="/simplesocket"></script>
 		
 		<script type="text/javascript">
 			var commands = {};
-			commands["reload"] = function( msgJson ){ $('link[href="/style"]').attr('href','/style'); };
+			commands["reload"] = function( msgJson ){ $('link[href="/style.css"]').attr('href','/style.css'); };
 			commands["setBackground"] = function( msgJson ){ $("body").css("background-image","url('"+msgJson.data+"')"); };
 			commands["setActiveShow"] = function( msgJson ){ 
 				for(i = 0; i < 10; i++)
@@ -67,7 +67,7 @@
 				fireworks.show();
 				fireworks.css({top: msgJson.data.positionY + $(window).height() / 2, left: msgJson.data.positionX + $(window).width() / 2, position: "absolute" });
 				setTimeout(function() { 
-					fireworks.attr('src', '/fireworks?hack='+currentFirework); 
+					fireworks.attr('src', '/fireworks.gif?hack='+currentFirework); 
 				}, 0);
 			};
 
@@ -102,26 +102,26 @@
 		</script>
 	</head>
 	<body>
-		<img id="fireworks0" class="fireworks" src="/fireworks">
-		<img id="fireworks1" class="fireworks" src="/fireworks">
-		<img id="fireworks2" class="fireworks" src="/fireworks">
-		<img id="fireworks3" class="fireworks" src="/fireworks">
-		<img id="fireworks4" class="fireworks" src="/fireworks">
-		<img id="fireworks5" class="fireworks" src="/fireworks">
-		<img id="fireworks6" class="fireworks" src="/fireworks">
-		<img id="fireworks7" class="fireworks" src="/fireworks">
-		<img id="fireworks8" class="fireworks" src="/fireworks">
-		<img id="fireworks9" class="fireworks" src="/fireworks">
-		<img id="fireworks10" class="fireworks" src="/fireworks">
-		<img id="fireworks11" class="fireworks" src="/fireworks">
-		<img id="fireworks12" class="fireworks" src="/fireworks">
-		<img id="fireworks13" class="fireworks" src="/fireworks">
-		<img id="fireworks14" class="fireworks" src="/fireworks">
-		<img id="fireworks15" class="fireworks" src="/fireworks">
-		<img id="fireworks16" class="fireworks" src="/fireworks">
-		<img id="fireworks17" class="fireworks" src="/fireworks">
-		<img id="fireworks18" class="fireworks" src="/fireworks">
-		<img id="fireworks19" class="fireworks" src="/fireworks">
+		<img id="fireworks0" class="fireworks" src="/fireworks.gif">
+		<img id="fireworks1" class="fireworks" src="/fireworks.gif">
+		<img id="fireworks2" class="fireworks" src="/fireworks.gif">
+		<img id="fireworks3" class="fireworks" src="/fireworks.gif">
+		<img id="fireworks4" class="fireworks" src="/fireworks.gif">
+		<img id="fireworks5" class="fireworks" src="/fireworks.gif">
+		<img id="fireworks6" class="fireworks" src="/fireworks.gif">
+		<img id="fireworks7" class="fireworks" src="/fireworks.gif">
+		<img id="fireworks8" class="fireworks" src="/fireworks.gif">
+		<img id="fireworks9" class="fireworks" src="/fireworks.gif">
+		<img id="fireworks10" class="fireworks" src="/fireworks.gif">
+		<img id="fireworks11" class="fireworks" src="/fireworks.gif">
+		<img id="fireworks12" class="fireworks" src="/fireworks.gif">
+		<img id="fireworks13" class="fireworks" src="/fireworks.gif">
+		<img id="fireworks14" class="fireworks" src="/fireworks.gif">
+		<img id="fireworks15" class="fireworks" src="/fireworks.gif">
+		<img id="fireworks16" class="fireworks" src="/fireworks.gif">
+		<img id="fireworks17" class="fireworks" src="/fireworks.gif">
+		<img id="fireworks18" class="fireworks" src="/fireworks.gif">
+		<img id="fireworks19" class="fireworks" src="/fireworks.gif">
 
 		<div id="stream">
 			<audio controls autoplay>
