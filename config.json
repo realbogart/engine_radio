@@ -2,7 +2,7 @@
 	"websocket_server_ip" : "ws://localhost:1338/",
 	"httpserver_port" : 1337,
 	"websocket_port" : 1338,
-	"stream_ip" : "http://sweeptheleg.club:8000/stream",
+	"stream_ip" : "http://localhost:8000/stream",
 	"password" : "replaceme",
 	"default_background" : "https://raised3rdday.files.wordpress.com/2013/08/cobrakai.png"
 }

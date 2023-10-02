@@ -3,7 +3,7 @@
 		<title>No mercy...</title>
 		<link rel="stylesheet" type="text/css" href="/style.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-		<script type="text/javascript" src="/simplesocket"></script>
+		<script type="text/javascript" src="jquery.simple.websocket.js"></script>
 		
 		<script type="text/javascript">
 			var commands = {};
@@ -97,7 +97,7 @@
 			$(document).click(function(e){
 				var center_x = $(window).width() / 2;
 				var center_y = $(window).height() / 2;
-				webSocket.send( JSON.stringify({ type : 'spawnFireworks', data : { positionX : e.pageX - center_x - 125, positionY : e.pageY - center_y - 125 } }) );
+				webSocket.send( { type : 'spawnFireworks', data : { positionX : e.pageX - center_x - 125, positionY : e.pageY - center_y - 125 } } );
 			});
 		</script>
 	</head>

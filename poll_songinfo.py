@@ -3,7 +3,8 @@
 import argparse
 from datetime import datetime
 import os
-from slackclient import SlackClient
+#from slackclient import SlackClient
+#from slack_sdk import WebClient
 import spotipy
 import spotipy.util as util
 import sys
@@ -19,15 +20,15 @@ def read_songinfo(file_path='testfile'):
             with open(file_path, 'r') as f:
                 song_info = f.read()
         else:
-            print 'File is empty, returning empty string'
+            print("File is empty, returning empty string")
     except OSError:
-        print 'File does not exist, returning empty string'
+        print("File does not exist, returning empty string")
 
     return song_info
 
 
 def write_songinfo(info_string, file_path='testfile'):
-    print "Writing info %s to file %s" % (info_string, file_path)
+    print(f"Writing info {info_string} to file {file_path}")
     with open(file_path, 'w') as f:
         f.write(info_string)
 
@@ -69,7 +70,7 @@ def get_spotify_songdata():
     spotify.trace = False
 
     try:
-        user_data = spotify.current_user_currently_playing(spotify_user)
+        user_data = spotify.current_user_playing_track()
         artists = user_data['item']['artists']
         song_name = user_data['item']['name']
         song_id = user_data['item']['id']
@@ -95,14 +96,14 @@ def get_spotify_songdata():
     # This error will sometimes be legit, with expired access token,
     # so pay attention to output if continuous errors occur.
     except spotipy.client.SpotifyException as e:
-        print "error fetching data, trying again later: %s" % e
+        print(f"error fetching data, trying again later: {e}")
         song_data = {}
 
     return song_data
 
 
 def get_local_file_songdata():
-    print 'not yet implemented'
+    print("not yet implemented")
     return {}
 
 
@@ -127,7 +128,7 @@ def make_slackstring(song_data):
 
 
 def post_slackmessage(slack_message):
-    print "Posting message: %s" % slack_message
+    print(f"Posting message: {slack_message}")
 
     slack_token = os.environ['SLACK_API_TOKEN']
     sc = SlackClient(slack_token)
@@ -141,11 +142,11 @@ def post_slackmessage(slack_message):
             text=slack_message
         )
     except:
-        print "%s - Error posting to slack in %s" % (datetime.now(), file_path)
+        print(f"{datetime.now()} - Error posting to slack in {file_path}")
 
 
 def poll_loop(source, get_songdata, file_path, poll_interval=5):
-    print "Starting loop with polling interval: %s" % poll_interval
+    print(f"Starting loop with polling interval: {poll_interval}")
 
     while True:
         #print "Sleep %s" % poll_interval
@@ -163,10 +164,10 @@ def poll_loop(source, get_songdata, file_path, poll_interval=5):
 #                post_slackmessage(slack_string)
 
             else:
-                print "%s - Current song is the same as saved in %s" % (datetime.now(), file_path)
+                print(f"{datetime.now()} - Current song is the same as saved in {file_path}")
 
         else:
-            print "%s - song data was empty, ignoring" % datetime.now()
+            print(f"{datetime.now()} - song data was empty, ignoring")
 
 
 def main(file_path, source, info_string=''):
@@ -176,10 +177,10 @@ def main(file_path, source, info_string=''):
         'local_file': get_local_file_songdata,
     }
 
-    print 'Starting up stuff...'
-    print "Music source is %s" % source
-    print "Filepath for butt song-info %s" % file_path
-    print "Optional info_string is %s" % info_string
+    print(f"Starting up stuff...")
+    print(f"Music source is {source}")
+    print(f"Filepath for butt song-info {file_path}")
+    print(f"Optional info_string is {info_string}")
 
     poll_loop(source, songdata_function_dict[source], file_path)
 
@@ -193,3 +194,4 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     main(args.file_path, args.source, args.info_string)
+

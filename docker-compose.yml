@@ -1,10 +1,10 @@
 version: '2'
 services:
-  engine_radio:
-    build: .
-    ports:
-     - "80:1337"
-     - "81:1338"
+  # engine_radio:
+  #   build: .
+  #   ports:
+  #    - "80:1337"
+  #    - "81:1338"
   icecast:
     image: moul/icecast
     ports:
