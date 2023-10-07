@@ -7,7 +7,6 @@
 		
 		<script type="text/javascript">
 			var commands = {};
-			commands["reload"] = function( msgJson ){ $('link[href="/style.css"]').attr('href','/style.css'); };
 			commands["setBackground"] = function( msgJson ){ $("body").css("background-image","url('"+msgJson.message+"')"); };
 			commands["setActiveShow"] = function( msgJson ){ 
 				for(i = 0; i < 10; i++)
@@ -84,10 +83,6 @@
 
 			var webSocket = $.simpleWebSocket({ url: '<websocket_server>' });
 			webSocket.connect();
-			
-			webSocket.isConnected(function(connected) {
-				webSocket.send('connected');
-			});
 			
 			webSocket.listen(function(msgString) {
 				var msgJson = JSON.parse( msgString );

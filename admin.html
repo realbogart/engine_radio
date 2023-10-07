@@ -7,10 +7,6 @@
 		var webSocket = $.simpleWebSocket({ url: '<websocket_server>' });
 		webSocket.connect();
 		
-		webSocket.isConnected(function(connected) {
-			webSocket.send('connected');
-		});
-		
 		function setSchedule(schedule)
 		{
 			jQuery('#schedule').html(JSON.stringify(schedule, null, 4));
