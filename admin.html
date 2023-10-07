@@ -1,7 +1,7 @@
 <html>
 	<head>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-		<script type="text/javascript" src="/simplesocket"></script>
+		<script type="text/javascript" src="jquery.simple.websocket.js"></script>
 		
 		<script type="text/javascript">
 		var webSocket = $.simpleWebSocket({ url: '<websocket_server>' });
@@ -19,8 +19,8 @@
 		webSocket.listen(function(msgString) {
 			var msgJson = JSON.parse( msgString );
 
-			if(msgJson.type == 'setSchedule') {
-				setSchedule(JSON.parse( msgJson.data ));
+			if(msgJson.command == 'setSchedule') {
+				setSchedule(msgJson.message);
 			}
 		});
 		
@@ -39,7 +39,7 @@
 				if(validJSON(scheduleText))
 				{
 					$('#info').html("Sending schedule...");
-					$.post('/setSchedule', scheduleText, function() {
+					$.post('setSchedule', JSON.parse(scheduleText), function() {
 						$('#info').html("Updated schedule!");
 					});
 				}
@@ -62,26 +62,26 @@
 				});
 			}
 
-			$('#getSchedules').click(function() {
-				$.ajax({
-					type: 'GET',
-					url: '/getSchedules',
-					dataType: 'json',
-					error: function(request, status, error) {
-						$('#info').html(error.message);
-					},
-					success: function(data) {
-						listSchedules(data);
-					}
-				});
-			});
+			<!-- $('#getSchedules').click(function() { -->
+			<!-- 	$.ajax({ -->
+			<!-- 		type: 'GET', -->
+			<!-- 		url: '/getSchedules', -->
+			<!-- 		dataType: 'json', -->
+			<!-- 		error: function(request, status, error) { -->
+			<!-- 			$('#info').html(error.message); -->
+			<!-- 		}, -->
+			<!-- 		success: function(data) { -->
+			<!-- 			listSchedules(data); -->
+			<!-- 		} -->
+			<!-- 	}); -->
+			<!-- }); -->
 		});
 		</script>
 	</head>
 	<body>
 		<textarea id="schedule" rows="48" cols="200"></textarea><br><br>
 		<input id="update" type="submit" value="Update"/>
-		<input id="getSchedules" type="submit" value="Load schedules from sheet"/>
+		<!-- <input id="getSchedules" type="submit" value="Load schedules from sheet"/> -->
 
 		<div id="sheetSchedule"></div>
 		<div id="info"></div>

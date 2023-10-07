@@ -8,7 +8,7 @@
 		<script type="text/javascript">
 			var commands = {};
 			commands["reload"] = function( msgJson ){ $('link[href="/style.css"]').attr('href','/style.css'); };
-			commands["setBackground"] = function( msgJson ){ $("body").css("background-image","url('"+msgJson.data+"')"); };
+			commands["setBackground"] = function( msgJson ){ $("body").css("background-image","url('"+msgJson.message+"')"); };
 			commands["setActiveShow"] = function( msgJson ){ 
 				for(i = 0; i < 10; i++)
 				{
@@ -16,10 +16,10 @@
 					$("#show"+i).addClass("showInactive");
 				}
 				
-				$("#show"+msgJson.data).addClass("showActive");
+				$("#show"+msgJson.message).addClass("showActive");
 			};
 			commands["setSchedule"] = function( msgJson ){ 
-				var scheduleJson = JSON.parse( msgJson.data );
+				var scheduleJson = msgJson.message;
 				jQuery('#schedule').html('');
 
 				var longestNameIndex = 0;
@@ -51,11 +51,11 @@
 				});
 			};
 			commands["setMetaData"] = function( msgJson ){ 
-				metaDataJson = JSON.parse( msgJson.data );
+				metaDataJson = JSON.parse( msgJson.message );
 				
 				jQuery('#nowPlaying').html('');
 				
-				if( metaDataJson.type == 'spotify' )
+				if( metaDataJson.command == 'spotify' )
 				{
 					jQuery('#nowPlaying').append( '<iframe src="https://open.spotify.com/embed/track/'+metaDataJson.id+'" width="300" height="380" frameborder="0" allowtransparency="true"></iframe>' );
 				}
@@ -65,20 +65,20 @@
 				var fireworks = $('#fireworks'+currentFirework);
 				currentFirework = (currentFirework + 1) % 20;
 				fireworks.show();
-				fireworks.css({top: msgJson.data.positionY + $(window).height() / 2, left: msgJson.data.positionX + $(window).width() / 2, position: "absolute" });
+				fireworks.css({top: msgJson.message.positionY + $(window).height() / 2, left: msgJson.message.positionX + $(window).width() / 2, position: "absolute" });
 				setTimeout(function() { 
 					fireworks.attr('src', '/fireworks.gif?hack='+currentFirework); 
 				}, 0);
 			};
 
 			function runCommand( msgJson ) {
-				if( msgJson.type in commands )
+				if( msgJson.command in commands )
 				{
-					commands[msgJson.type](msgJson);
+					commands[msgJson.command](msgJson);
 				}
 				else
 				{
-					alert( "not found: " + msgJson.type );
+					alert( "not found: " + msgJson.command );
 				}
 			}
 
@@ -97,7 +97,7 @@
 			$(document).click(function(e){
 				var center_x = $(window).width() / 2;
 				var center_y = $(window).height() / 2;
-				webSocket.send( { type : 'spawnFireworks', data : { positionX : e.pageX - center_x - 125, positionY : e.pageY - center_y - 125 } } );
+				webSocket.send( { command : 'spawnFireworks', message : { positionX : e.pageX - center_x - 125, positionY : e.pageY - center_y - 125 } } );
 			});
 		</script>
 	</head>
