@@ -38,10 +38,21 @@
 				var scheduleText = $('#schedule').val();
 				if(validJSON(scheduleText))
 				{
-					$('#info').html("Sending schedule...");
-					$.post('setSchedule', JSON.parse(scheduleText), function() {
-						$('#info').html("Updated schedule!");
-					});
+          $.ajax({
+              url: '/setSchedule',
+              method: 'POST',
+              contentType: 'application/json',
+              dataType: 'json',
+              data: scheduleText,
+              success: function() {
+                  $('#info').html("Updated schedule!");
+              },
+              error: function(jqXHR, textStatus, errorThrown) {
+                  $('#info').html("Failed to update schedule: " + textStatus);
+                  console.error("Error:", errorThrown);
+                  console.error("Response Text:", jqXHR.responseText);
+              }
+          });
 				}
 				else
 				{
@@ -61,20 +72,6 @@
 					newSchedule.appendTo("#sheetSchedule");
 				});
 			}
-
-			<!-- $('#getSchedules').click(function() { -->
-			<!-- 	$.ajax({ -->
-			<!-- 		type: 'GET', -->
-			<!-- 		url: '/getSchedules', -->
-			<!-- 		dataType: 'json', -->
-			<!-- 		error: function(request, status, error) { -->
-			<!-- 			$('#info').html(error.message); -->
-			<!-- 		}, -->
-			<!-- 		success: function(data) { -->
-			<!-- 			listSchedules(data); -->
-			<!-- 		} -->
-			<!-- 	}); -->
-			<!-- }); -->
 		});
 		</script>
 	</head>
