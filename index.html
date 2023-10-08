@@ -18,12 +18,11 @@
 				$("#show"+msgJson.message).addClass("showActive");
 			};
 			commands["setSchedule"] = function( msgJson ){ 
-				var scheduleJson = msgJson.message;
 				jQuery('#schedule').html('');
 
 				var longestNameIndex = 0;
 				var longestName = 0;
-				jQuery.each(scheduleJson.shows, function(i, val) {
+				jQuery.each(msgJson.activeSchedule.slots, function(i, val) {
 					var nameLength = val.name.length;
 					if( val.name && nameLength > longestName )
 					{
@@ -33,7 +32,7 @@
 				});
 
 				var showIndex = 0;
-				jQuery.each(scheduleJson.shows, function(i, val) {
+				jQuery.each(msgJson.activeSchedule.slots, function(i, val) {
 					if( val.name )
 					{
 						var spacing = " ";
@@ -44,10 +43,23 @@
 						}
 						spacing += " ";
 
-						jQuery('#schedule').append('<p id="show'+showIndex+'" class="showInactive">'+val.name + spacing + val.time + '</p>');
+            activeString = "showInactive"
+            if (showIndex == msgJson.activeSlot)
+              activeString = "showActive"
+
+						jQuery('#schedule').append('<p id="show'+showIndex+'" class="' + activeString + '">'+val.name + spacing + val.time + '</p>');
 						showIndex++;
 					}
 				});
+
+        let activeSlot = msgJson.activeSchedule.slots[msgJson.activeSlot];
+        if (!activeSlot || !activeSlot.imageLink) {
+            activeSlot = {
+                imageLink: 'background.png'
+            };
+        }
+
+        $("body").css("background-image", "url('" + activeSlot.imageLink + "')");
 			};
 			commands["setMetaData"] = function( msgJson ){ 
 				metaDataJson = JSON.parse( msgJson.message );
@@ -64,7 +76,7 @@
 				var fireworks = $('#fireworks'+currentFirework);
 				currentFirework = (currentFirework + 1) % 20;
 				fireworks.show();
-				fireworks.css({top: msgJson.message.positionY + $(window).height() / 2, left: msgJson.message.positionX + $(window).width() / 2, position: "absolute" });
+				fireworks.css({top: msgJson.positionY + $(window).height() / 2, left: msgJson.positionX + $(window).width() / 2, position: "absolute" });
 				setTimeout(function() { 
 					fireworks.attr('src', '/fireworks.gif?hack='+currentFirework); 
 				}, 0);
@@ -73,7 +85,7 @@
 			function runCommand( msgJson ) {
 				if( msgJson.command in commands )
 				{
-					commands[msgJson.command](msgJson);
+					commands[msgJson.command](msgJson.message);
 				}
 				else
 				{
