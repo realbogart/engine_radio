@@ -4,21 +4,6 @@
 		<script type="text/javascript" src="jquery.simple.websocket.js"></script>
 		
 		<script type="text/javascript">
-		var webSocket = $.simpleWebSocket({ url: '<websocket_server>' });
-		webSocket.connect();
-		
-		function setSchedule(schedule)
-		{
-			jQuery('#schedule').html(JSON.stringify(schedule, null, 4));
-		}
-
-		webSocket.listen(function(msgString) {
-			var msgJson = JSON.parse( msgString );
-
-			if(msgJson.command == 'setSchedule') {
-				setSchedule(msgJson.message.activeSchedule);
-			}
-		});
 		
 		function validJSON(text) {
 		    try {
@@ -29,6 +14,26 @@
 		    return true;
 		}
 
+    function test()
+    {
+      alert("LOL")
+    }
+
+		function setSchedule(schedule)
+		{
+			jQuery('#schedule').html(JSON.stringify(schedule, null, 4));
+		}
+
+		var webSocket = $.simpleWebSocket({ url: '<websocket_server>' });
+		webSocket.connect();
+		webSocket.listen(function(msgString) {
+			var msgJson = JSON.parse( msgString );
+
+			if(msgJson.command == 'setSchedule') {
+				setSchedule(msgJson.message.activeSchedule);
+			}
+		});
+		
 		$(function() {
 			$('#update').click(function() {
 				var scheduleText = $('#schedule').val();
@@ -55,26 +60,12 @@
 					$('#info').html("Invalid JSON");
 				}
 			});
-
-			function listSchedules(schedules)
-			{
-				$('#sheetSchedule').html('');
-				jQuery.each(schedules, function(i, val) {
-					var newSchedule = $("<p />", { text: val.title });
-					newSchedule.on("click", function() {
-						setSchedule(val);
-					});
-
-					newSchedule.appendTo("#sheetSchedule");
-				});
-			}
 		});
 		</script>
 	</head>
 	<body>
 		<textarea id="schedule" rows="48" cols="200"></textarea><br><br>
 		<input id="update" type="submit" value="Update"/>
-		<!-- <input id="getSchedules" type="submit" value="Load schedules from sheet"/> -->
 
 		<div id="sheetSchedule"></div>
 		<div id="info"></div>
