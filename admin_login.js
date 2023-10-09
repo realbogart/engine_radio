@@ -24,7 +24,7 @@ document.getElementById('passwordForm').addEventListener('submit', function(e) {
         return response.text();
     })
     .then(html => {
-      //document.documentElement.innerHTML = html;
+      window.location.href = '/admin';
     })
     .catch(error => {
         console.error("Error: ", error);
